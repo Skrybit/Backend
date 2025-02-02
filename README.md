@@ -1,21 +1,21 @@
 # Inscription API Endpoints
 
 ## Create Commit
-\```bash
+```bash
 curl -X POST \
   -F "file=@/path/to/your/file.txt" \
   -F "recipientAddress=YOUR_BTC_ADDRESS" \
   -F "feeRate=2" \
   http://localhost:3000/api/commit
-\```
+```
 
 ## Check Commit Status
-\```bash
+```bash
 curl http://localhost:3000/api/commit/1/status
-\```
+```
 
 ## Create Reveal
-\```bash
+```bash
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
@@ -25,12 +25,12 @@ curl -X POST \
     "amount": 3005
   }' \
   http://localhost:3000/api/reveal
-\```
+```
 
 ## Check Reveal Status
-\```bash
+```bash
 curl http://localhost:3000/api/reveal/1/status
-\```
+```
 
 # Workflow
 1. Create commit transaction and save details
