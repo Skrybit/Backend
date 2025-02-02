@@ -19,7 +19,7 @@ curl http://localhost:3000/api/commit/1/status
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
-    "inscriptionId": "1",
+    "inscriptionId": "1", 
     "commitTxId": "YOUR_COMMIT_TXID",
     "vout": 0,
     "amount": 3005
