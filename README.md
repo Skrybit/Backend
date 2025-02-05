@@ -1,7 +1,7 @@
 # Inscription API Endpoints
 
 ## Create Commit Transaction
-This endpoint creates a commit transaction for your inscription.
+Creates a commit transaction for an inscription.
 
 ```bash
 curl -X POST \
@@ -26,23 +26,33 @@ curl -X POST \
 - `feeRate`: Transaction fee rate in sats/vB (default: 2)
 
 ## Check Commit Status
-Check the status of your commit transaction.
+Check the status of a commit transaction using sequential ID numbers.
 
 ```bash
-curl http://172.81.178.142:3000/api/commit/{txid}/status
+curl http://172.81.178.142:3000/api/commit/{id}/status
 ```
 
-Replace {txid} with your commit transaction ID received from the commit endpoint.
+Example:
+```bash
+curl http://172.81.178.142:3000/api/commit/1/status
+```
+
+The ID is a sequential number starting from 1. Examples:
+```bash
+curl http://172.81.178.142:3000/api/commit/1/status
+curl http://172.81.178.142:3000/api/commit/2/status
+curl http://172.81.178.142:3000/api/commit/3/status
+```
 
 ## Create Reveal Transaction
-Create a reveal transaction once your commit transaction is confirmed.
+Creates a reveal transaction once the commit transaction is confirmed.
 
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
-    "inscriptionId": "YOUR_INSCRIPTION_ID", 
-    "commitTxId": "YOUR_COMMIT_TXID",
+    "inscriptionId": "1", 
+    "commitTxId": "COMMIT_TXID",
     "vout": 0,
     "amount": 3005
   }' \
@@ -50,45 +60,50 @@ curl -X POST \
 ```
 
 ### Parameters:
-- `inscriptionId`: Unique identifier for your inscription
+- `inscriptionId`: Sequential ID number matching the commit ID
 - `commitTxId`: Transaction ID from the commit step
 - `vout`: Output index (usually 0)
 - `amount`: Amount in satoshis
 
 ## Check Reveal Status
-Monitor the status of your reveal transaction.
+Monitor the status of a reveal transaction.
 
 ```bash
-curl http://172.81.178.142:3000/api/reveal/{txid}/status
+curl http://172.81.178.142:3000/api/reveal/{id}/status
 ```
 
-Replace {txid} with your reveal transaction ID.
+Example:
+```bash
+curl http://172.81.178.142:3000/api/reveal/1/status
+```
+
+The ID follows the same sequential numbering as the commit status.
 
 # Inscription Workflow
 
 1. **Create Commit Transaction**
-   - Submit your file and recipient address
-   - Save the returned commit transaction ID
+   - Submit the file and recipient address
+   - Save both the sequential ID and transaction ID
    - Note the payment address and amount required
 
-2. **Send Bitcoin Payment**
-   - Send the required BTC amount to the provided address
-   - Wait for transaction confirmation
+2. **Request Bitcoin Payment**
+   - Request user to send the required BTC amount to the provided address
 
 3. **Monitor Commit Status**
-   - Check commit transaction status periodically
-   - Wait for confirmed status
+   - The Bitcoin payment transaction IS the commit transaction
+   - Check commit status using the sequential ID
 
 4. **Create Reveal Transaction**
    - Once commit is confirmed, create reveal transaction
-   - Include commit transaction details
+   - Use the same sequential ID from commit step
+   - Include the commit transaction ID
 
 5. **Monitor Reveal Status**
-   - Check reveal transaction status
+   - Check reveal status using the sequential ID
    - Wait for final confirmation
 
 # Notes
-- Ensure sufficient Bitcoin is sent for the inscription
-- Keep track of all transaction IDs
+- Sequential IDs start from 1 and increment with each new inscription
+- Important to track both sequential ID and transaction ID
 - Monitor both commit and reveal status until completion
 - Server is running at 172.81.178.142:3000
